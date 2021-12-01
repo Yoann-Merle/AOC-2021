@@ -1,8 +1,9 @@
 #!/bin/python3
 
 def read_file(filename):
-    f = open(filename)
-    lines = f.readlines()
+    with open(filename) as f:
+        lines = f.readlines()
+
     return lines
 
 def sum_array(array):

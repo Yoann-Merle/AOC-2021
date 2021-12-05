@@ -23,30 +23,38 @@ def generate_points(segments):
     for segment in segments:
         start = segment[0]
         end = segment[1]
-        if start[0] == end[0]:
-            s = end[1] if start[1] > end[1] else start[1]
-            e = start[1] + 1 if start[1] > end[1] else end[1] + 1
-            for p in range(s, e):
-                if (start[0], p) not in points:
-                    points[(start[0], p)] = 0
-                points[(start[0], p)] += 1
-        else:
-            s = end[0] if start[0] > end[0] else start[0]
-            e = start[0] + 1 if start[0] > end[0] else end[0] + 1
-            for p in range(s, e):
-                if (p, start[1]) not in points:
-                    points[(p, start[1])] = 0
-                points[(p, start[1])] += 1
+        point = start
+        if end not in points:
+            points[end] = 0
+        points[end] += 1
+        while point != end:
+            if point not in points:
+                points[point] = 0
+            points[point] += 1
+            if point[0] < end[0]:
+                point = (point[0] + 1, point[1])
+            if point[0] > end[0]:
+                point = (point[0] - 1, point[1])
+            if point[1] < end[1]:
+                point = (point[0], point[1] + 1)
+            if point[1] > end[1]:
+                point = (point[0], point[1] - 1)
+
     return points
 
 def main():
     lines = read_file('input.txt')
+
+    # part 1
     seg = extract_segments(lines)
     points = generate_points(seg)
     nb_multi_points = sum([1 for x in points if points[x] > 1])
-    print('Start 1: ', nb_multi_points)
+    print('Start 1: ', sum([1 for x in points if points[x] > 1]))
 
-    # print('Start 2: ', result)
+    # part 2
+    seg = extract_segments(lines, False)
+    points = generate_points(seg)
 
+    print('Start 2: ', sum([1 for x in points if points[x] > 1]))
 
 main()

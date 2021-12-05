@@ -24,27 +24,19 @@ def generate_points(segments):
         start = segment[0]
         end = segment[1]
         if start[0] == end[0]:
-            if start[1] > end[1]:
-                for p in range(end[1], start[1] + 1):
-                    if (start[0], p) not in points:
-                        points[(start[0], p)] = 0
-                    points[(start[0], p)] += 1
-            else:
-                for p in range(start[1], end[1] + 1):
-                    if (start[0], p) not in points:
-                        points[(start[0], p)] = 0
-                    points[(start[0], p)] += 1
+            s = end[1] if start[1] > end[1] else start[1]
+            e = start[1] + 1 if start[1] > end[1] else end[1] + 1
+            for p in range(s, e):
+                if (start[0], p) not in points:
+                    points[(start[0], p)] = 0
+                points[(start[0], p)] += 1
         else:
-            if start[0] > end[0]:
-                for p in range(end[0], start[0] + 1):
-                    if (p, start[1]) not in points:
-                        points[(p, start[1])] = 0
-                    points[(p, start[1])] += 1
-            else:
-                for p in range(start[0], end[0] + 1):
-                    if (p, start[1]) not in points:
-                        points[(p, start[1])] = 0
-                    points[(p, start[1])] += 1
+            s = end[0] if start[0] > end[0] else start[0]
+            e = start[0] + 1 if start[0] > end[0] else end[0] + 1
+            for p in range(s, e):
+                if (p, start[1]) not in points:
+                    points[(p, start[1])] = 0
+                points[(p, start[1])] += 1
     return points
 
 def main():

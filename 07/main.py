@@ -18,7 +18,7 @@ def calculate_diff(val, serie):
 def calculate_diff_2(val, serie):
     sum_diff = 0
     for v in serie:
-        sum_diff += sum([i + 1 for i, a in enumerate(range(abs(v - val)))])
+        sum_diff += int(abs(v - val) * (abs(v - val) + 1) / 2)
 
     return sum_diff
 

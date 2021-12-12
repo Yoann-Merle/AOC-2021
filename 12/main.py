@@ -8,13 +8,16 @@ def read_file(filename):
 
     return lines
 
-def complete_path(path, caves):
+def complete_path(path, caves, haveTime = False):
     c_paths = []
     for cave in caves:
         copy_path = copy.copy(path)
         if path[-1] in cave:
             i = 1 if path[-1] == cave[0] else 0
-            if cave[i].isupper() or (cave[i].islower() and cave[i] not in path):
+            if cave[i].isupper() or cave[i] not in path or (
+                haveTime and path.count(cave[i]) < 2 and
+                len([x for x in path if x.islower() and path.count(x) > 1]) == 0
+            ):
                 copy_path.append(cave[i])
                 c_paths.append(copy_path)
 
@@ -30,19 +33,22 @@ def clean_paths(paths):
 
 def main():
     lines = read_file('input.txt')
-    caves = []
-    paths = []
-    f_paths = []
+    i_caves = []
+    i_paths = []
     for line in lines:
         x, y = line.split('-')
         if x == 'start':
-            paths.append([x, y])
+            i_paths.append([x, y])
             continue
         if y == 'start':
-            paths.append([y, x])
+            i_paths.append([y, x])
             continue
-        caves.append((x, y))
+        i_caves.append((x, y))
 
+    # Star 1
+    caves = copy.copy(i_caves)
+    paths = copy.copy(i_paths)
+    f_paths = []
     while len(paths) > 0:
         f_paths += clean_paths(paths)
         for path in copy.copy(paths):
@@ -50,7 +56,19 @@ def main():
             paths += c_paths
             paths.remove(path)
 
-    # Star 1
     print('Start 1: ', len(f_paths))
+
+    # Star 2
+    caves = copy.copy(i_caves)
+    paths = copy.copy(i_paths)
+    f_paths = []
+    while len(paths) > 0:
+        f_paths += clean_paths(paths)
+        for path in copy.copy(paths):
+            c_paths = complete_path(path, caves, True)
+            paths += c_paths
+            paths.remove(path)
+
+    print('Start 2: ', len(f_paths))
 
 main()
